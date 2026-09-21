@@ -1,0 +1,48 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply m-0 p-0 overflow-hidden h-screen w-screen bg-background text-text-primary font-sans;
+  }
+}
+
+/* Recharts Customization for Dark Theme */
+.recharts-cartesian-grid-horizontal line,
+.recharts-cartesian-grid-vertical line {
+  stroke: #2A3241;
+}
+
+.recharts-text {
+  fill: #94A3B8 !important;
+}
+
+/* React Flow Dark Theme Overrides */
+.react-flow__bg {
+  background-color: #0B0E14 !important;
+}
+
+.react-flow__edge-path {
+  stroke: #2A3241 !important;
+  stroke-width: 2 !important;
+}
+
+/* Custom Scrollbar for high-density tables/panels */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2A3241;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #64748B;
+}

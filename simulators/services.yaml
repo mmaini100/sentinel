@@ -1,0 +1,34 @@
+services:
+  - name: api-gateway
+    description: "Main API entry point, routes requests to downstream services"
+    dependencies:
+      - auth-service
+      - orders-service
+    base_latency_ms: 30
+    base_error_rate: 0.01
+
+  - name: auth-service
+    description: "Handles authentication and token validation"
+    dependencies: []
+    base_latency_ms: 20
+    base_error_rate: 0.005
+
+  - name: orders-service
+    description: "Manages order lifecycle"
+    dependencies:
+      - payments-service
+      - inventory-service
+    base_latency_ms: 80
+    base_error_rate: 0.02
+
+  - name: payments-service
+    description: "Processes payments via external gateway"
+    dependencies: []
+    base_latency_ms: 150
+    base_error_rate: 0.03
+
+  - name: inventory-service
+    description: "Tracks inventory levels and reservations"
+    dependencies: []
+    base_latency_ms: 40
+    base_error_rate: 0.01

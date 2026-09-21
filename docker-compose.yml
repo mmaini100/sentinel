@@ -1,0 +1,168 @@
+services:
+  # =============================================
+  # Infrastructure
+  # =============================================
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: sentinel
+      POSTGRES_PASSWORD: sentinel
+      POSTGRES_DB: sentinel
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sentinel -d sentinel"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6380:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # =============================================
+  # Backend (FastAPI + consumer)
+  # =============================================
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    ports:
+      - "8088:8000"
+    environment:
+      DATABASE_URL: postgresql+asyncpg://sentinel:sentinel@postgres:5432/sentinel
+      REDIS_URL: redis://redis:6379/0
+      SERVICES_YAML_PATH: /app/services.yaml
+      ENVIRONMENT: development
+      JWT_SECRET_KEY: dev-secret-key-change-in-production
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      ANOMALY_DETECTOR: zscore
+      CORRELATION_WINDOW_SECONDS: "60"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+      - ./simulators/services.yaml:/app/services.yaml:ro
+
+  # =============================================
+  # Simulators (1 image × 5 containers)
+  # =============================================
+  sim-api-gateway:
+    build:
+      context: ./simulators
+    environment:
+      SERVICE_NAME: api-gateway
+      SERVICE_DEPS: auth-service,orders-service
+      BASE_LATENCY_MS: "30"
+      BASE_ERROR_RATE: "0.01"
+      REDIS_URL: redis://redis:6379/0
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  sim-auth-service:
+    build:
+      context: ./simulators
+    environment:
+      SERVICE_NAME: auth-service
+      SERVICE_DEPS: ""
+      BASE_LATENCY_MS: "20"
+      BASE_ERROR_RATE: "0.005"
+      REDIS_URL: redis://redis:6379/0
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  sim-orders-service:
+    build:
+      context: ./simulators
+    environment:
+      SERVICE_NAME: orders-service
+      SERVICE_DEPS: payments-service,inventory-service
+      BASE_LATENCY_MS: "80"
+      BASE_ERROR_RATE: "0.02"
+      REDIS_URL: redis://redis:6379/0
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  sim-payments-service:
+    build:
+      context: ./simulators
+    environment:
+      SERVICE_NAME: payments-service
+      SERVICE_DEPS: ""
+      BASE_LATENCY_MS: "150"
+      BASE_ERROR_RATE: "0.03"
+      REDIS_URL: redis://redis:6379/0
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  sim-inventory-service:
+    build:
+      context: ./simulators
+    environment:
+      SERVICE_NAME: inventory-service
+      SERVICE_DEPS: ""
+      BASE_LATENCY_MS: "40"
+      BASE_ERROR_RATE: "0.01"
+      REDIS_URL: redis://redis:6379/0
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  # =============================================
+  # Observability
+  # =============================================
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9091:9090"
+    volumes:
+      - ./infra/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    depends_on:
+      - backend
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3010:3000"
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: sentinel
+      GF_USERS_ALLOW_SIGN_UP: "false"
+    volumes:
+      - ./infra/grafana/dashboards:/var/lib/grafana/dashboards:ro
+      - ./infra/grafana/provisioning:/etc/grafana/provisioning:ro
+    depends_on:
+      - prometheus
+
+  # =============================================
+  # Frontend (stub for Phase 1)
+  # =============================================
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "5174:5174"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+
+volumes:
+  pgdata:
