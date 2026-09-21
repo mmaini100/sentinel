@@ -7,13 +7,13 @@ export default {
   theme: {
     extend: {
       colors: {
-        background: '#0B0E14',
-        surface: '#151A23',
-        surfaceHover: '#1E2532',
-        border: '#2A3241',
+        background: '#F8FAFC',
+        surface: '#FFFFFF',
+        surfaceHover: '#F1F5F9',
+        border: '#E2E8F0',
         text: {
-          primary: '#E2E8F0',
-          secondary: '#94A3B8',
+          primary: '#0F172A',
+          secondary: '#334155',
           muted: '#64748B',
         },
         status: {

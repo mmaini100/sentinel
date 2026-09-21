@@ -118,11 +118,11 @@ export default function Evaluation() {
                     <stop offset="95%" stopColor="#3B82F6" stopOpacity={0}/>
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#2A3241" vertical={false} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" vertical={false} />
                 <XAxis dataKey="time" stroke="#64748B" fontSize={12} tickLine={false} axisLine={false} />
                 <YAxis stroke="#64748B" fontSize={12} tickLine={false} axisLine={false} hide />
                 <Tooltip 
-                  contentStyle={{ backgroundColor: '#151A23', borderColor: '#2A3241', borderRadius: '8px', color: '#E2E8F0', boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.5)' }}
+                  contentStyle={{ backgroundColor: '#FFFFFF', borderColor: '#E2E8F0', borderRadius: '8px', color: '#0F172A', boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)' }}
                 />
                 <Area type="monotone" dataKey="severityScore" stroke="#3B82F6" strokeWidth={3} fillOpacity={1} fill="url(#colorSeverity)" />
               </AreaChart>
@@ -137,11 +137,11 @@ export default function Evaluation() {
           <div className="h-72">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={severityData} margin={{ top: 20 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#2A3241" vertical={false} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" vertical={false} />
                 <XAxis dataKey="name" stroke="#64748B" fontSize={12} tickLine={false} axisLine={false} />
                 <Tooltip 
-                  cursor={{fill: '#1E2532'}}
-                  contentStyle={{ backgroundColor: '#151A23', borderColor: '#2A3241', borderRadius: '8px', color: '#E2E8F0' }}
+                  cursor={{fill: '#F1F5F9'}}
+                  contentStyle={{ backgroundColor: '#FFFFFF', borderColor: '#E2E8F0', borderRadius: '8px', color: '#0F172A' }}
                 />
                 <Bar dataKey="count" radius={[6, 6, 0, 0]} maxBarSize={60}>
                   {severityData.map((entry, index) => (

@@ -67,7 +67,7 @@ export default function Services() {
       ? 'bg-status-critical/20 text-status-critical border-status-critical/50'
       : 'bg-status-healthy/10 text-status-healthy border-status-healthy/20'
       
-    const nodeBorder = isDegraded ? '#EF4444' : '#2A3241'
+    const nodeBorder = isDegraded ? '#EF4444' : '#E2E8F0'
     const nodeGlow = isDegraded ? '0 0 15px rgba(239, 68, 68, 0.4)' : 'none'
     
     nodes.push({
@@ -84,11 +84,11 @@ export default function Services() {
         )
       },
       style: {
-        background: '#151A23',
+        background: '#FFFFFF',
         border: `1px solid ${nodeBorder}`,
         boxShadow: nodeGlow,
         borderRadius: '12px',
-        color: '#E2E8F0',
+        color: '#0F172A',
         width: 170,
       }
     });
@@ -98,7 +98,7 @@ export default function Services() {
       const targetService = services.find(s => s.id === dep.depends_on_service_id)
       const isTargetDegraded = targetService && isServiceDegraded(targetService.name)
       
-      const edgeColor = isDegraded || isTargetDegraded ? '#EF4444' : '#64748B'
+      const edgeColor = isDegraded || isTargetDegraded ? '#EF4444' : '#94A3B8'
       
       edges.push({
         id: `e-${service.id}-${dep.depends_on_service_id}`,
@@ -143,7 +143,7 @@ export default function Services() {
           fitView
           attributionPosition="bottom-right"
         >
-          <Background color="#2A3241" gap={16} />
+          <Background color="#E2E8F0" gap={16} />
           <Controls className="bg-surface border-border !fill-text-primary" />
         </ReactFlow>
       </div>

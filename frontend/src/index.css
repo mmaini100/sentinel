@@ -8,23 +8,23 @@
   }
 }
 
-/* Recharts Customization for Dark Theme */
+/* Recharts Customization for Light Theme */
 .recharts-cartesian-grid-horizontal line,
 .recharts-cartesian-grid-vertical line {
-  stroke: #2A3241;
+  stroke: #E2E8F0;
 }
 
 .recharts-text {
-  fill: #94A3B8 !important;
+  fill: #64748B !important;
 }
 
-/* React Flow Dark Theme Overrides */
+/* React Flow Light Theme Overrides */
 .react-flow__bg {
-  background-color: #0B0E14 !important;
+  background-color: #F8FAFC !important;
 }
 
 .react-flow__edge-path {
-  stroke: #2A3241 !important;
+  stroke: #CBD5E1 !important;
   stroke-width: 2 !important;
 }
 
@@ -39,10 +39,10 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #2A3241;
+  background: #CBD5E1;
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #64748B;
+  background: #94A3B8;
 }
